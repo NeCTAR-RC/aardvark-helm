@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aardvark-config
+data:
+  aardvark.conf: |
+{{ include "aardvark-conf" . | indent 4 }}

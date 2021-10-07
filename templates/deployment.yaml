@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aardvark.fullname" . }}
+  labels:
+    {{- include "aardvark.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "aardvark.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config-map.yaml") . | sha256sum }}
+        vault.hashicorp.com/role: "{{ .Values.vault.role }}"
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-status: "update"
+        vault.hashicorp.com/agent-inject-secret-secrets.conf: "{{ .Values.vault.settings_secret }}"
+        vault.hashicorp.com/agent-inject-template-secrets.conf: |
+          {{ print "{{- with secret \"" .Values.vault.settings_secret "\" -}}" }}
+          {{ print "[database]" }}
+          {{ print "connection={{ .Data.data.database_connection }}" }}
+          {{ print "[placement]" }}
+          {{ print "password={{ .Data.data.keystone_password }}" }}
+          {{ print "[compute]" }}
+          {{ print "password={{ .Data.data.keystone_password }}" }}
+          {{ print "[identity]" }}
+          {{ print "password={{ .Data.data.keystone_password }}" }}
+          {{ print "{{- end -}}" }}
+      labels:
+        {{- include "aardvark.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "aardvark.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - 'sleep'
+        - '200'
+        command:
+        - '/var/lib/openstack/bin/aardvark_reaper'
+        - '--config-file'
+        - '/etc/aardvark/aardvark.conf'
+        - '--config-file'
+        - '/vault/secrets/secrets.conf'
+        volumeMounts:
+          - name: aardvark-config
+            mountPath: "/etc/aardvark/"
+            readOnly: true
+      volumes:
+      - name: aardvark-config
+        configMap:
+          name: aardvark-config
