@@ -26,8 +26,8 @@ conf:
   watched_aggregates: aardvark
   keystone:
     auth_url:
-    username:
-    project_name:
+    username: aardvark
+    project_name: aardvark
 
 
 vault:
