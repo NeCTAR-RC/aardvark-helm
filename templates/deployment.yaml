@@ -54,10 +54,10 @@ spec:
         - '--config-file'
         - '/vault/secrets/secrets.conf'
         volumeMounts:
-          - name: aardvark-config
+          - name: {{ include "aardvark.fullname" . }}
             mountPath: "/etc/aardvark/"
             readOnly: true
       volumes:
-      - name: aardvark-config
+      - name: {{ include "aardvark.fullname" . }}
         configMap:
-          name: aardvark-config
+          name: {{ include "aardvark.fullname" . }}
