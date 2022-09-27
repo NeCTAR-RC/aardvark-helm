@@ -6,7 +6,7 @@ image:
   repository: "registry.rc.nectar.org.au/loci/aardvark"
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "victoria-r1402df48-l8dd56b4-g9490996"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
