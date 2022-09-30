@@ -43,6 +43,7 @@ auth_type=password
 enabled = true
 memcache_servers={{ join "," .Values.conf.memcached_servers }}
 backend = dogpile.cache.memcached
+expiration_time = 43200
 {{- end }}
 
 {{- end }}
