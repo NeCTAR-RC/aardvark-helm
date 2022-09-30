@@ -28,7 +28,7 @@ conf:
     auth_url:
     username: aardvark
     project_name: aardvark
-
+  memcached_servers:
 
 vault:
   role: k8s

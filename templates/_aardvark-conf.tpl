@@ -38,4 +38,11 @@ user_domain_name=Default
 project_domain_name=Default
 auth_type=password
 
+{{- if .Values.conf.memcached_servers }}
+[cache]
+enabled = true
+memcache_servers={{ join "," .Values.conf.memcached_servers }}
+backend = dogpile.cache.memcached
+{{- end }}
+
 {{- end }}
