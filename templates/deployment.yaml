@@ -58,6 +58,8 @@ spec:
           - name: {{ include "aardvark.fullname" . }}
             mountPath: "/etc/aardvark/"
             readOnly: true
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
       volumes:
       - name: {{ include "aardvark.fullname" . }}
         configMap:
