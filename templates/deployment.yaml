@@ -46,10 +46,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command:
-        - 'sleep'
-        - '200'
-        command:
-        - '/var/lib/openstack/bin/aardvark_reaper'
+        - 'aardvark_reaper'
         - '--config-file'
         - '/etc/aardvark/aardvark.conf'
         - '--config-file'
