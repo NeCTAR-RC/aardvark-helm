@@ -2,5 +2,5 @@ apiVersion: v2
 name: aardvark
 description: A Helm chart for aardvark
 type: application
-version: 3.0.6
-appVersion: 2.0.0-6-gde72f15
+version: 3.0.7
+appVersion: 2.0.0-6-g70e154a
